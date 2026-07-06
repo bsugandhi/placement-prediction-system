@@ -116,8 +116,3 @@ python services/api_gateway/main.py
 - **Models Compared:** Logistic Regression, Random Forest, XGBoost
 - **Evaluation Metric:** F1-Score (primary), Accuracy, AUC-ROC
 - **Best Model:** Automatically selected based on highest F1-score
-
-## Course
-
-AIMLCZG546 - Software Engineering for Machine Learning
-BITS Pilani (WILP)
