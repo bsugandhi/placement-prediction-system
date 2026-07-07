@@ -3,7 +3,7 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 
 
 def engineer_features(df: pd.DataFrame) -> pd.DataFrame:
-    """Stage 3: Feature engineering - create derived features, encode, scale."""
+    """Filter: Feature engineering - create derived features, encode, scale."""
 
     # Create derived features
     if "cgpa" in df.columns and "tenth_pct" in df.columns and "twelfth_pct" in df.columns:

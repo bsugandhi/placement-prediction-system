@@ -7,7 +7,7 @@ from sklearn.metrics import (
 
 
 def evaluate_and_select(training_result: dict) -> str:
-    """Stage 5: Evaluate all models and save the best one."""
+    """Filter: Evaluate all models and save the best one."""
 
     models = training_result["models"]
     X_test = training_result["X_test"]

@@ -15,11 +15,11 @@ This system helps:
 
 The system implements two architectural patterns:
 
-### 1. Pipeline Pattern (Offline ML Training)
-Sequential stages with clear input/output contracts:
+### 1. Pipe and Filter Pattern (Offline ML Training)
+Independent filters connected by pipes — each filter transforms data and passes it along:
 
 ```
-Data Ingestion → Data Cleaning → Feature Engineering → Model Training → Model Evaluation
+[CSV Path] →|pipe|→ [Filter: Ingest] →|pipe|→ [Filter: Clean] →|pipe|→ [Filter: Engineer] →|pipe|→ [Filter: Train] →|pipe|→ [Filter: Evaluate] →|pipe|→ [Model]
 ```
 
 ### 2. Microservices Pattern (Online Serving)
@@ -51,8 +51,8 @@ The Streamlit app is self-contained — it generates synthetic data and trains t
 ```
 ├── app/
 │   └── streamlit_app.py              # Frontend (Student, Officer, Recruiter dashboards)
-├── pipeline/                          # Pipeline Architecture Pattern
-│   ├── run_pipeline.py                # Pipeline orchestrator
+├── pipeline/                          # Pipe and Filter Architecture Pattern
+│   ├── run_pipeline.py                # Pipe and Filter orchestrator
 │   ├── data_ingestion.py              # Stage 1: Load data
 │   ├── data_cleaning.py               # Stage 2: Clean & handle outliers
 │   ├── feature_engineering.py         # Stage 3: Derive features, encode, scale
@@ -116,3 +116,8 @@ python services/api_gateway/main.py
 - **Models Compared:** Logistic Regression, Random Forest, XGBoost
 - **Evaluation Metric:** F1-Score (primary), Accuracy, AUC-ROC
 - **Best Model:** Automatically selected based on highest F1-score
+
+## Course
+
+AIMLCZG546 - Software Engineering for Machine Learning
+BITS Pilani (WILP)

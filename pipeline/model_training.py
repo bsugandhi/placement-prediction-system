@@ -7,7 +7,7 @@ from sklearn.svm import SVC
 
 
 def train_models(df: pd.DataFrame) -> dict:
-    """Stage 4: Train multiple candidate models."""
+    """Filter: Train multiple candidate models."""
 
     target_col = "placed"
     feature_cols = [c for c in df.columns if c != target_col]

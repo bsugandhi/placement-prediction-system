@@ -71,13 +71,13 @@ def generate_placement_data():
 
 
 # ============================================================
-# ML PIPELINE (Pipeline Pattern - runs once, cached)
+# ML PIPELINE (Pipe and Filter Pattern - runs once, cached)
 # ============================================================
 @st.cache_resource
 def run_pipeline(df):
     """
-    Pipeline Architecture Pattern Implementation.
-    Stages: Ingestion -> Cleaning -> Feature Engineering -> Training -> Evaluation
+    Pipe and Filter Architecture Pattern Implementation.
+    Filters: Ingestion -> Cleaning -> Feature Engineering -> Training -> Evaluation
     """
 
     # --- Stage 1: Data Ingestion ---
@@ -178,7 +178,7 @@ st.success(
 role = st.sidebar.selectbox("Select Role", ["Student", "Placement Officer", "Recruiter"])
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Architecture Patterns")
-st.sidebar.markdown("1. **Pipeline Pattern** - Data flows through sequential stages")
+st.sidebar.markdown("1. **Pipe and Filter Pattern** - Data flows through independent filters connected by pipes")
 st.sidebar.markdown("2. **Microservices Pattern** - Independent services for prediction, notifications, user mgmt")
 st.sidebar.markdown("---")
 st.sidebar.markdown("### Model Comparison")

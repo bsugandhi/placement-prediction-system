@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
-    """Stage 2: Data cleaning - handle missing values, duplicates, outliers."""
+    """Filter: Data cleaning - handle missing values, duplicates, outliers."""
 
     initial_rows = len(df)
 

@@ -1,8 +1,14 @@
 """
-Pipeline Architecture Pattern Implementation
-=============================================
-Sequential stages with clear input/output contracts.
-Each stage is independently testable and replaceable.
+Pipe and Filter Architecture Pattern Implementation
+=====================================================
+- Filters: Independent processing components that transform data
+- Pipes: Connectors that pass data (output of one filter → input of next)
+
+Each filter:
+- Is independent and self-contained
+- Reads from an input pipe, processes, writes to output pipe
+- Has no knowledge of other filters in the system
+- Can be replaced, reordered, or tested independently
 """
 
 import sys
@@ -16,43 +22,82 @@ from pipeline.model_training import train_models
 from pipeline.model_evaluation import evaluate_and_select
 
 
-class PlacementPipeline:
-    """Pipeline architecture: sequential stages with clear contracts.
+class Pipe:
+    """Connector between filters. Holds data flowing between processing stages."""
 
-    Each stage:
-    - Has a defined input type and output type
-    - Can be independently tested
-    - Can be replaced without affecting other stages
-    - Logs its progress for monitoring
+    def __init__(self, data=None):
+        self.data = data
+
+    def write(self, data):
+        self.data = data
+
+    def read(self):
+        return self.data
+
+
+class Filter:
+    """Independent processing component in the Pipe and Filter architecture."""
+
+    def __init__(self, name: str, process_fn):
+        self.name = name
+        self.process_fn = process_fn
+
+    def execute(self, input_pipe: Pipe, output_pipe: Pipe):
+        """Read from input pipe, process, write to output pipe."""
+        input_data = input_pipe.read()
+        print(f"[Filter: {self.name}] Processing...")
+        result = self.process_fn(input_data)
+        output_pipe.write(result)
+        print(f"[Filter: {self.name}] Done.")
+        return output_pipe
+
+
+class PipeAndFilterSystem:
+    """Pipe and Filter architecture: data flows through independent filters
+    connected by pipes.
+
+    Pattern characteristics:
+    - Filters are decoupled - they don't know about each other
+    - Pipes connect filters and transfer data
+    - Filters can be added, removed, or reordered independently
+    - Each filter has a single responsibility
     """
 
-    def __init__(self, data_path: str):
-        self.data_path = data_path
-        self.stages = [
-            ("Data Ingestion", ingest_data),
-            ("Data Cleaning", clean_data),
-            ("Feature Engineering", engineer_features),
-            ("Model Training", train_models),
-            ("Model Evaluation", evaluate_and_select),
-        ]
+    def __init__(self):
+        self.filters = []
 
-    def run(self):
-        """Execute pipeline stages sequentially."""
+    def add_filter(self, name: str, process_fn):
+        """Add a filter to the system."""
+        self.filters.append(Filter(name, process_fn))
+
+    def run(self, initial_input):
+        """Execute all filters in sequence, connected by pipes."""
         print("\n" + "=" * 60)
-        print("PLACEMENT PREDICTION PIPELINE")
+        print("PIPE AND FILTER SYSTEM - Placement Prediction")
         print("=" * 60)
 
-        data = self.data_path
-        for i, (stage_name, stage_fn) in enumerate(self.stages, 1):
+        # Create initial pipe with input data
+        current_pipe = Pipe(initial_input)
+
+        for i, filt in enumerate(self.filters, 1):
             print(f"\n{'─' * 60}")
-            print(f"Stage {i}/{len(self.stages)}: {stage_name}")
+            print(f"Filter {i}/{len(self.filters)}: {filt.name}")
             print(f"{'─' * 60}")
-            data = stage_fn(data)
+
+            # Create output pipe for this filter
+            output_pipe = Pipe()
+
+            # Execute filter: reads from current_pipe, writes to output_pipe
+            filt.execute(current_pipe, output_pipe)
+
+            # Output pipe becomes input pipe for next filter
+            current_pipe = output_pipe
 
         print(f"\n{'=' * 60}")
-        print("PIPELINE COMPLETED SUCCESSFULLY")
+        print("ALL FILTERS EXECUTED SUCCESSFULLY")
         print(f"{'=' * 60}\n")
-        return data
+
+        return current_pipe.read()
 
 
 if __name__ == "__main__":
@@ -60,5 +105,14 @@ if __name__ == "__main__":
         os.path.dirname(os.path.dirname(__file__)),
         "data", "placement_data.csv"
     )
-    pipeline = PlacementPipeline(data_path)
-    result = pipeline.run()
+
+    # Build the Pipe and Filter system
+    system = PipeAndFilterSystem()
+    system.add_filter("Data Ingestion", ingest_data)
+    system.add_filter("Data Cleaning", clean_data)
+    system.add_filter("Feature Engineering", engineer_features)
+    system.add_filter("Model Training", train_models)
+    system.add_filter("Model Evaluation", evaluate_and_select)
+
+    # Run: data flows through pipes connecting each filter
+    result = system.run(data_path)
